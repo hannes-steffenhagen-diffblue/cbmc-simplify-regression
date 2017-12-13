@@ -107,9 +107,10 @@ class TestBase:
 
     try:
       with open(options.exclusions_file, 'r') as exclusions_file:
-        self.test_exclusions = exclusions_file.readlines()
+        self.test_exclusions = list(map(lambda ln: ln.strip(), exclusions_file.readlines()))
     except FileNotFoundError:
       self.test_exclusions = []
+    print(self.test_exclusions)
 
     self.script_timeout = options.timeout
     self.counters = Counters()
@@ -125,7 +126,7 @@ class TestBase:
     if not os.path.isdir(self.benchmarks_path):
       subprocess.check_call(['git', 'clone', 'https://github.com/sosy-lab/sv-benchmarks.git',
                              self.benchmarks_path,
-                             '--depth', 1])
+                             '--depth', '1'])
 
   def compile_goto(self, in_file, out_file=None):
     goto_cc_argv = [self.goto_cc, in_file]
